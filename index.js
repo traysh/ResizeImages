@@ -1,6 +1,7 @@
-var cool = require('cool-ascii-faces');
 var express = require('express');
 var app = express();
+
+var fetch = require('./fetch.js')
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -14,12 +15,15 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-app.get('/cool', function(request, response) {
-  response.send(cool());
-});
-
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
+var data = require('./persistence.js')
+data.store('http://oi', 'small', 'medium', 'large');
+data.retrieve('http://oi', function(doc) {
+    console.log(doc);
+    data.close();
+});
 
+//fetch.all();
