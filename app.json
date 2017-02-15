@@ -1,8 +1,8 @@
 {
-  "name": "Start on Heroku: Node.js",
-  "description": "A barebones Node.js app using Express 4",
-  "repository": "https://github.com/heroku/node-js-getting-started",
-  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "name": "ResizeImages",
+  "description": "Solution of ResizeImages challenge",
+  "repository": "https://github.com/traysh/ResizeImages.git",
+  "logo": "",
   "keywords": ["node", "express", "static"],
   "image": "heroku/nodejs"
 }
