@@ -1,5 +1,5 @@
-var url = require("url");
-var path = require("path");
+var url = require('url');
+var path = require('path');
 var sharp = require('sharp');
 
 var fetch = require('./fetch.js')
@@ -12,16 +12,14 @@ module.exports = {
 };
 
 function populate_database() {
-    let base_url = '';
-    
     fetch.json('http://54.152.221.29/images.json', function(data) {
         for (let i = 0; i < data.images.length; i++) {
             fetch.image(data.images[i].url, function (body) {
                 let original_url = data.images[i].url;
                 let original_basename = path.basename(url.parse(original_url).pathname);
-                let small_url = base_url + 'small_' + original_basename;
-                let medium_url = base_url + 'medium_' + original_basename;
-                let large_url = base_url + 'large_ ' + original_basename;
+                let small_url = 'small_' + original_basename;
+                let medium_url = 'medium_' + original_basename;
+                let large_url = 'large_'  + original_basename;
                 
                 persistence.store_urls(original_url, small_url, medium_url, large_url);
                 

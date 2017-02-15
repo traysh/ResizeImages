@@ -15,7 +15,7 @@ module.exports = {
     },
     
     store_image: function(url, image_data) {
-        let image = new Url({
+        let image = new Image({
             url: url,
             data: image_data
         });
@@ -25,11 +25,12 @@ module.exports = {
         });
     },
     
-    retrieve: function(url, cb) {
-        Url.findOne({ url: url }).exec(function (err, doc) {
-            if (err) throw err;
-            console.log('inner: ' + doc);
-            cb(doc);
+    retrieve_image: function(url, cb) {
+        Image.findOne({ url: url }).exec(function (err, doc) {
+            if (!doc)
+                err = true
+                
+            cb(err, doc);
         });
     },
     
