@@ -74,6 +74,7 @@ module.exports = {
 }
 
 var uri = process.env.MONGODB_URI
+console.log('URI: ' + uri);
 mongoose.Promise = global.Promise
 mongoose.connect(uri);
 
