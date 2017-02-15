@@ -1,12 +1,23 @@
 var mongoose = require('mongoose');
 
 module.exports = {
-    store: function(url, smallImage, mediumImage, largeImage) {
-        let image = new Image({
+    store_urls: function(original_url, small_url, medium_url, large_url) {
+        let url = new Url({
+            original_url: original_url,
+            small_url: small_url,
+            medium_url: medium_url,
+            large_url: large_url
+        });
+    
+        url.save(function(err) {
+            if (err) throw err;
+        });
+    },
+    
+    store_image: function(url, image_data) {
+        let image = new Url({
             url: url,
-            smallImage: smallImage,
-            mediumImage: mediumImage,
-            largeImage: largeImage
+            data: image_data
         });
     
         image.save(function(err) {
@@ -15,17 +26,46 @@ module.exports = {
     },
     
     retrieve: function(url, cb) {
-        Image.findOne({ url: url }).exec(function (err, doc) {
+        Url.findOne({ url: url }).exec(function (err, doc) {
             if (err) throw err;
             console.log('inner: ' + doc);
             cb(doc);
         });
     },
     
+    retrieve_urls: function(cb) {
+        Url.find({original_url: { $ne: null }}, '-_id original_url small_url medium_url large_url', function (err, docs) {
+            if (err) throw err;
+            
+            console.log(docs);
+            cb(docs);
+        });
+    },
+    
+    refresh: function(callback) {
+        let clear_collection = function(collection) {
+            return function(cb) {
+                collection.count(function (err, count) {
+                    if (err) throw err;
+                                
+                    if (count === 0)
+                        cb();
+                    else
+                        collection.drop(cb);
+                });
+            };
+        };
+            
+        let urls_collection = mongoose.connection.collections['urls'];
+        let images_collection = mongoose.connection.collections['images'];
+        
+        clear_urls = clear_collection(urls_collection);
+        clear_images = clear_collection(images_collection);
+        clear_urls(clear_images(callback));
+    },
+    
     close: function() {
-        mongoose.connection.collections['images'].drop(function (err) {
-            if(err) throw err;
-
+        refresh(function() {
             db.close(function (err) {
                 if(err) throw err;
             });
@@ -37,16 +77,20 @@ var uri = process.env.MONGODB_URI
 mongoose.Promise = global.Promise
 mongoose.connect(uri);
 
-// Create schema
-var schema = mongoose.Schema({
-    url: String,
-    smallImage: Buffer,
-    mediumImage: Buffer,
-    largeImage: Buffer
+var urls_schema = mongoose.Schema({
+    original_url: String,
+    small_url: String,
+    medium_url: String,
+    large_url: String
 });
 
-// Store image documents in a collection called "images"
-var Image = mongoose.model('images', schema);
+var images_schema = mongoose.Schema({
+    url: String,
+    data: Buffer
+});
+
+var Url = mongoose.model('urls', urls_schema);
+var Image = mongoose.model('images', images_schema);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
