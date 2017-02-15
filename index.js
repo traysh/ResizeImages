@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
 
-var populate = require('./populate');
-var persistence = require('./persistence');
+var populate = require('./populate.js');
+var persistence = require('./persistence.js');
 
 app.set('port', (process.env.PORT || 5000));
 

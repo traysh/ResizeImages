@@ -1,9 +1,9 @@
 var url = require("url");
 var path = require("path");
+var sharp = require('sharp');
 
 var fetch = require('./fetch.js')
 var persistence = require('./persistence.js')
-var sharp = require('sharp');
 
 module.exports = {
     database: function() {
