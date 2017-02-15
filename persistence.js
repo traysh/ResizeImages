@@ -59,9 +59,9 @@ module.exports = {
         let urls_collection = mongoose.connection.collections['urls'];
         let images_collection = mongoose.connection.collections['images'];
         
-        clear_urls = clear_collection(urls_collection);
-        clear_images = clear_collection(images_collection);
-        clear_urls(clear_images(callback));
+        let clear_urls = clear_collection(urls_collection);
+        let clear_images_and_urls = function (cb) { clear_urls(cb) };
+        clear_images_and_urls(callback);
     },
     
     close: function() {
@@ -74,7 +74,6 @@ module.exports = {
 }
 
 var uri = process.env.MONGODB_URI
-console.log('URI: ' + uri);
 mongoose.Promise = global.Promise
 mongoose.connect(uri);
 

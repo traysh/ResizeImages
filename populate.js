@@ -9,7 +9,7 @@ module.exports = {
     database: function() {
         persistence.refresh(populate_database);
     }
-}
+};
 
 function populate_database() {
     let base_url = '';
